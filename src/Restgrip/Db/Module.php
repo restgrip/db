@@ -13,6 +13,7 @@ use Phalcon\Mvc\Model\Metadata\Files as FilesMetaData;
 use Phalcon\Mvc\Model\Metadata\Apc as ApcMetaData;
 use Phalcon\Mvc\Model\Metadata\Memcache as MemcacheMetaData;
 use Phalcon\Mvc\Model\Metadata\Libmemcached as LibmemcachedMetaData;
+use Restgrip\Db\Console\InitDatabaseCommand;
 use Restgrip\Db\Console\ResetMetadataCommand;
 use Restgrip\Module\ModuleAbstract;
 
@@ -201,6 +202,7 @@ class Module extends ModuleAbstract
     {
         $this->getDI()->getShared('console')->addCommands(
             [
+                new InitDatabaseCommand($this->getDI()),
                 new ResetMetadataCommand($this->getDI()),
             ]
         );
