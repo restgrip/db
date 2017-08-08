@@ -27,8 +27,8 @@ class ResetMetadataCommand extends CommandAbstract
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $manager = $this->getMetadataManager();
-        $manager->reset();
+        $this->getMetadataManager()->reset();
+        $this->getModelsManager()->clearReusableObjects();
         $output->writeln('<info>Metadata cleared</info>');
     }
 }
