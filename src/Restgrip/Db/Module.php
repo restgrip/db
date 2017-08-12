@@ -28,7 +28,7 @@ class Module extends ModuleAbstract
      */
     protected $defaultConfigs = [
         'driver'          => 'mysql',
-        'metadata'        => 'redis',
+        'metadata'        => 'memory',
         'driverConfigs'   => [
             'mysql'  => [
                 'host'      => '127.0.0.1',
@@ -64,19 +64,20 @@ class Module extends ModuleAbstract
                 'db'         => 0,
                 'statsKey'   => '_DB_METADATA_',
                 'persistent' => 0,
-                'lifetime'   => 3600,
+                'lifetime'   => 2592000,
                 'index'      => 3,
             ],
             'files'        => [
-                'metaDataDir' => '/tmp/',
+                // dir with ending '/'
+                'metaDataDir' => null,
             ],
             'apc'          => [
                 'prefix'   => 'metadata-prefix',
-                'lifetime' => 86400,
+                'lifetime' => 2592000,
             ],
             'memcache'     => [
                 'prefix'     => 'metadata-prefix',
-                'lifetime'   => 86400,
+                'lifetime'   => 2592000,
                 'host'       => '127.0.0.1',
                 'port'       => 11211,
                 'persistent' => false,
@@ -93,7 +94,7 @@ class Module extends ModuleAbstract
                     // \Memcached::OPT_HASH       => \Memcached::HASH_MD5,
                     // \Memcached::OPT_PREFIX_KEY => 'restgrip.',
                 ],
-                'lifetime' => 3600,
+                'lifetime' => 2592000,
                 'prefix'   => 'restgrip_',
             ],
         ],
@@ -168,11 +169,15 @@ class Module extends ModuleAbstract
                         $instance = new RedisMetaData($config);
                         break;
                     case 'memory':
-                        $config   = $config->metadataConfigs->{$metadata}->toArray();
-                        $instance = new MemoryMetaData($config);
+                        // memory adapter does not have any config to set
+                        // @link https://github.com/phalcon/cphalcon/blob/2d3aa171588d2d82ed26ade076c70d77ca07e2a3/phalcon/mvc/model/metadata/memory.zep#L42-L43
+                        $instance = new MemoryMetaData();
                         break;
                     case 'files':
-                        $config   = $config->metadataConfigs->{$metadata}->toArray();
+                        $config = $config->metadataConfigs->{$metadata}->toArray();
+                        if ($configs['metaDataDir'] == null) {
+                            $configs['metaDataDir'] = sys_get_temp_dir().DIRECTORY_SEPARATOR;
+                        }
                         $instance = new FilesMetaData($config);
                         break;
                     case 'apc':
