@@ -175,8 +175,8 @@ class Module extends ModuleAbstract
                         break;
                     case 'files':
                         $config = $config->metadataConfigs->{$metadata}->toArray();
-                        if ($configs['metaDataDir'] == null) {
-                            $configs['metaDataDir'] = sys_get_temp_dir().DIRECTORY_SEPARATOR;
+                        if ($config['metaDataDir'] == null) {
+                            $config['metaDataDir'] = sys_get_temp_dir().DIRECTORY_SEPARATOR;
                         }
                         $instance = new FilesMetaData($config);
                         break;
